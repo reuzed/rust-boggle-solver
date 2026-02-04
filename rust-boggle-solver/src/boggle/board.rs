@@ -2,6 +2,7 @@ use std::fmt;
 
 use super::letter::random_scrabble_letter;
 
+#[derive(PartialEq, Copy, Clone)]
 pub struct Coord {
     x: usize,
     y: usize,
@@ -17,8 +18,12 @@ impl Board {
         Board { arr: [r1,r2,r3,r4] }
     }
 
-    pub fn at(&self, c: Coord) -> char {
+    pub fn at(&self, c: &Coord) -> char {
         self.arr[c.y][c.x]
+    }
+
+    pub fn path_word(&self, path: &Vec<Coord>) -> String {
+        path.iter().map(|c| self.at(c)).collect()
     }
 }
 

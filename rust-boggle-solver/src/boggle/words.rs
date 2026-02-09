@@ -2,14 +2,22 @@ use std::{collections::{HashSet}, fs, sync::LazyLock};
 
 static WORDS: LazyLock<HashSet<String>> = LazyLock::new(||{
     let contents = fs::read_to_string("words.txt").expect("words.txt exists");
+    let start = std::time::Instant::now();
 
-    contents.lines().filter(|w| w.len() <= 16).map(|s| s.to_string()).collect()
+    let a = contents.lines().filter(|w| w.len() <= 16).map(|s| s.to_string()).collect();
+    println!("Built words hashmap in {:?}", start.elapsed());
+    a
+
 });
 
-static WORD_PREFIXES: LazyLock<HashSet<String>> = LazyLock::new(||{
-    let contents = fs::read_to_string("words.txt").expect("words.txt exists");
-
-    contents.lines().filter(|w| w.len() <= 16).flat_map(|w| prefixes(w)).map(|s| s.to_string()).collect()
+static WORD_PREFIXES: LazyLock<HashSet<Box<str>>> = LazyLock::new(||{
+    let start = std::time::Instant::now();
+    let a = WORDS.iter()
+        .flat_map(|w| prefixes(w))
+        .map(|s| s.to_string().into_boxed_str())
+        .collect();
+    println!("Built word prefixes hashmap in {:?}", start.elapsed());
+    a
 });
 
 fn prefixes(word: &str) -> Vec<String> {

@@ -2,7 +2,7 @@ use std::fmt;
 
 use super::letter::random_scrabble_letter;
 
-#[derive(PartialEq, Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 pub struct Coord {
     x: usize,
     y: usize,
@@ -64,7 +64,7 @@ pub fn neighbouring_coords(c: Coord) -> Vec<Coord> {
     // Return the indices adjacent and within grid
     let (x,y) = (c.x as i32, c.y as i32);
     ADJACENCIES.iter().map(|p| [p[0] + x, p[1] + y] )
-    .filter(|p| 0 <= p[0] && p[0] < 4 && 0 <= p[1] && p[1] <= 4)
+    .filter(|p| 0 <= p[0] && p[0] < 4 && 0 <= p[1] && p[1] < 4)
     .map(|p| Coord { x: p[0] as usize, y: p[1] as usize })
     .collect()
 }

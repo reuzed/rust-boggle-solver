@@ -1,7 +1,14 @@
-use rust_boggle_solver::board::random_board;
+use rust_boggle_solver::{board::random_board, solver::solve};
 
 fn main() {
-    let board = random_board();
+    for i in 0..10{
 
-    println!("{}", board);
+        let board = random_board();
+    
+        println!("{}", board);
+        for wr in solve(&board) {
+            print!("{}, ", wr.word)
+        }
+        println!("{}", board);
+    }
 }

@@ -3,16 +3,15 @@
 // For this we need a word set - words.txt - https://github.com/dwyl/english-words/blob/master/words_alpha.txt
 // Could try out https://github.com/wordset/wordset-dictionary
 
-use lambda_http::ext;
-
 use super::{board::{Board, Coord, coords_vec, neighbouring_coords}, words::{is_prefix, is_word}};
 
+#[derive(Debug)]
 pub struct WordRecord {
-    path: Vec<Coord>,
-    word: String,
+    pub path: Vec<Coord>,
+    pub word: String,
 }
 
-pub fn solve(board: Board) -> Vec<WordRecord> {
+pub fn solve(board: &Board) -> Vec<WordRecord> {
     let start_coords = coords_vec();
 
     // From each start position on the boggle board, follow all adjancencies

@@ -3,7 +3,9 @@
 // For this we need a word set - words.txt - https://github.com/dwyl/english-words/blob/master/words_alpha.txt
 // Could try out https://github.com/wordset/wordset-dictionary
 
-use super::{board::{Board, Coord, coords_vec, neighbouring_coords}, words::is_prefix};
+use lambda_http::ext;
+
+use super::{board::{Board, Coord, coords_vec, neighbouring_coords}, words::{is_prefix, is_word}};
 
 pub struct WordRecord {
     path: Vec<Coord>,
@@ -16,13 +18,25 @@ pub fn solve(board: Board) -> Vec<WordRecord> {
     // From each start position on the boggle board, follow all adjancencies
     // At each step, check if the current path's word is a prefix of some word
     // If not a prefix we can return early, if path is a word, add to output
+    
+    let mut word_records: Vec<WordRecord> = Vec::new();
+    let mut paths: Vec<Vec<Coord>> = Vec::new();
     for start in start_coords.into_iter() {
-
+        paths.push(vec![start]);
     }
-    panic!()
+    for _ in 0..16{
+        paths = paths.iter().flat_map(|p| extend_paths(&board, p)).collect();
+        for path in &paths {
+            let word = board.path_word(path);
+            if is_word(&word) {
+                word_records.push(WordRecord { path:path.to_vec(), word });
+            }
+        }
+    }
+    word_records
 }
 
-fn partial_solve(board: Board, path: Vec<Coord>) -> Vec<Vec<Coord>> {
+fn extend_paths(board: &Board, path: &Vec<Coord>) -> Vec<Vec<Coord>> {
     let path_end = path[path.len()-1];
 
     let mut extended_paths: Vec<Vec<Coord>> = Vec::new();

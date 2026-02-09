@@ -1,24 +1,30 @@
-use std::{collections::{HashSet}, fs, sync::LazyLock};
-use rustc_hash::FxHashSet;
+use std::{collections::HashSet, fs::{self, File}, sync::LazyLock};
 
-static WORDS: LazyLock<FxHashSet<String>> = LazyLock::new(||{
-    let contents = fs::read_to_string("words.txt").expect("words.txt exists");
+static WORDS: LazyLock<HashSet<String>> = LazyLock::new(||{
+ 
+    let mut words: HashSet<String> = HashSet::with_capacity(364247);
+
     let start = std::time::Instant::now();
-
-    let a = contents.lines().filter(|w| w.len() <= 16).map(|s| s.to_string()).collect();
+    let contents = fs::read_to_string("words.txt").expect("words.txt exists");
+    words.extend(contents.lines().filter(|w| w.len() <= 16).map(|s| s.to_string()));
     println!("Built words hashmap in {:?}", start.elapsed());
-    a
+    words
 
 });
 
-static WORD_PREFIXES: LazyLock<FxHashSet<Box<str>>> = LazyLock::new(||{
+static WORD_PREFIXES: LazyLock<HashSet<Box<str>>> = LazyLock::new(||{
     let start = std::time::Instant::now();
-    let a = WORDS.iter()
+    let mut word_prefixes: HashSet<Box<str>> = HashSet::with_capacity(5 * 364247);
+    word_prefixes.extend(WORDS.iter()
         .flat_map(|w| prefixes(w))
         .map(|s| s.to_string().into_boxed_str())
-        .collect();
+        .collect::<Vec<Box<str>>>());
+    // let a = WORDS.iter()
+    //     .flat_map(|w| prefixes(w))
+    //     .map(|s| s.to_string().into_boxed_str())
+    //     .collect();
     println!("Built word prefixes hashmap in {:?}", start.elapsed());
-    a
+    word_prefixes
 });
 
 fn prefixes(word: &str) -> Vec<String> {

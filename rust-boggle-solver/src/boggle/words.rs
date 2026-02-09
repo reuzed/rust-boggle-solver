@@ -1,6 +1,7 @@
 use std::{collections::{HashSet}, fs, sync::LazyLock};
+use rustc_hash::FxHashSet;
 
-static WORDS: LazyLock<HashSet<String>> = LazyLock::new(||{
+static WORDS: LazyLock<FxHashSet<String>> = LazyLock::new(||{
     let contents = fs::read_to_string("words.txt").expect("words.txt exists");
     let start = std::time::Instant::now();
 
@@ -10,7 +11,7 @@ static WORDS: LazyLock<HashSet<String>> = LazyLock::new(||{
 
 });
 
-static WORD_PREFIXES: LazyLock<HashSet<Box<str>>> = LazyLock::new(||{
+static WORD_PREFIXES: LazyLock<FxHashSet<Box<str>>> = LazyLock::new(||{
     let start = std::time::Instant::now();
     let a = WORDS.iter()
         .flat_map(|w| prefixes(w))

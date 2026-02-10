@@ -1,66 +1,34 @@
 use lambda_http::{Body, Error, Request, RequestExt, Response};
+use rust_boggle_solver::{board::Board, solver::solve};
+use serde::{Serialize, Deserialize};
+use serde_json;
 
-/// This is the main body for the function.
-/// Write your code inside it.
-/// There are some code example in the following URLs:
-/// - https://github.com/awslabs/aws-lambda-rust-runtime/tree/main/examples
+#[derive(Deserialize)]
+struct SolveRequest {
+    r1: [char;4],
+    r2: [char;4],
+    r3: [char;4],
+    r4: [char;4],
+}
+
 pub(crate) async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
     // Extract some useful information from the request
-    let who = event
-        .query_string_parameters_ref()
-        .and_then(|params| params.first("name"))
-        .unwrap_or("world");
-    let message = format!("Hello {who}, this is an AWS Lambda HTTP request");
+    let solve_request: SolveRequest = serde_json::from_slice(event.body().as_ref())?;
+        
+    let board = Board::new(
+        solve_request.r1,
+        solve_request.r2,
+        solve_request.r3,
+        solve_request.r4,
+    );
 
-    // Return something that implements IntoResponse.
-    // It will be serialized to the right response event automatically by the runtime
     let resp = Response::builder()
         .status(200)
         .header("content-type", "text/html")
-        .body(message.into())
+        .body(
+            Body::from(serde_json::to_string(&solve(&board))?)
+        )
         .map_err(Box::new)?;
+    
     Ok(resp)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::collections::HashMap;
-    use lambda_http::{Request, RequestExt};
-
-    #[tokio::test]
-    async fn test_generic_http_handler() {
-        let request = Request::default();
-
-        let response = function_handler(request).await.unwrap();
-        assert_eq!(response.status(), 200);
-
-        let body_bytes = response.body().to_vec();
-        let body_string = String::from_utf8(body_bytes).unwrap();
-
-        assert_eq!(
-            body_string,
-            "Hello world, this is an AWS Lambda HTTP request"
-        );
-    }
-
-    #[tokio::test]
-    async fn test_http_handler_with_query_string() {
-        let mut query_string_parameters: HashMap<String, String> = HashMap::new();
-        query_string_parameters.insert("name".into(), "rust-boggle-solver".into());
-
-        let request = Request::default()
-            .with_query_string_parameters(query_string_parameters);
-
-        let response = function_handler(request).await.unwrap();
-        assert_eq!(response.status(), 200);
-
-        let body_bytes = response.body().to_vec();
-        let body_string = String::from_utf8(body_bytes).unwrap();
-
-        assert_eq!(
-            body_string,
-            "Hello rust-boggle-solver, this is an AWS Lambda HTTP request"
-        );
-    }
 }

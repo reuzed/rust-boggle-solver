@@ -1,8 +1,10 @@
 use std::fmt;
 
+use serde::Serialize;
+
 use super::letter::random_scrabble_letter;
 
-#[derive(PartialEq, Copy, Clone, Debug)]
+#[derive(PartialEq, Copy, Clone, Debug, Serialize)]
 pub struct Coord {
     x: usize,
     y: usize,

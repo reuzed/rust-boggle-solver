@@ -3,9 +3,11 @@
 // For this we need a word set - words.txt - https://github.com/dwyl/english-words/blob/master/words_alpha.txt
 // Could try out https://github.com/wordset/wordset-dictionary
 
+use serde::Serialize;
+
 use super::{board::{Board, Coord, coords_vec, neighbouring_coords}, words::{is_prefix, is_word}};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct WordRecord {
     pub path: Vec<Coord>,
     pub word: String,

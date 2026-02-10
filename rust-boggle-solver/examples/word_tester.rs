@@ -1,4 +1,4 @@
-use std::io::{BufRead, stdin};
+use std::io::{stdin, BufRead};
 
 use rust_boggle_solver::words::{is_prefix, is_word};
 

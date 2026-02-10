@@ -1,4 +1,8 @@
-use std::{collections::HashSet, fs::{self}, sync::LazyLock};
+use std::{
+    collections::HashSet,
+    fs::{self},
+    sync::LazyLock,
+};
 
 pub fn load_words() -> HashSet<Box<str>> {
     let start = std::time::Instant::now();
@@ -20,7 +24,7 @@ static WORD_PREFIXES: LazyLock<HashSet<Box<str>>> = LazyLock::new(|| {
         .iter()
         .flat_map(|w| prefixes(w))
         .map(Box::from) // &str -> Box<str> directly
-        .collect();      // collect straight into the HashSet, no intermediate Vec
+        .collect(); // collect straight into the HashSet, no intermediate Vec
     println!("Built word prefixes hashmap in {:?}", start.elapsed());
     word_prefixes
 });

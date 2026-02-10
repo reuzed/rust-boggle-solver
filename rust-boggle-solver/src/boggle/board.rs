@@ -11,6 +11,7 @@ pub struct Coord {
 }
 
 #[derive(Debug)]
+#[derive(Serialize)]
 pub struct Board {
     arr: [[char; 4]; 4],
 }

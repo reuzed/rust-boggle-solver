@@ -1,10 +1,17 @@
-use lambda_http::{run, service_fn, tracing, Error};
+use lambda_http::{service_fn, Error};
 mod http_handler;
 use http_handler::function_handler;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-    tracing::init_default_subscriber();
+    lambda_http::tracing::init_default_subscriber();
 
-    run(service_fn(function_handler)).await
+    let func = service_fn(function_handler);
+    if let Err(err) = lambda_http::run(
+        func
+    ).await {
+        eprint!("run error {:?}",err);
+        return Err(err);
+    }
+    Ok(())
 }

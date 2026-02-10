@@ -35,7 +35,7 @@ For generic events, where you define the event data structure, you can create a 
 
 ```json
 {
-    "command": "test"
+  "command": "test"
 }
 ```
 
@@ -44,7 +44,13 @@ Then, run `cargo lambda invoke --data-file ./data.json` to invoke the function w
 For HTTP events, you can also call the function directly with cURL or any other HTTP client. For example:
 
 ```bash
-curl https://localhost:9000
+curl http://localhost:9000
+```
+
+Check if other cargo lambda is running:
+
+```bash
+lsof -i :9000
 ```
 
 Read more about running the local server in [the Cargo Lambda documentation for the `watch` command](https://www.cargo-lambda.info/commands/watch.html).

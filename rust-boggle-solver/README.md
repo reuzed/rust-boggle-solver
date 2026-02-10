@@ -33,10 +33,13 @@ cargo lambda invoke --data-example apigw-request
 
 For generic events, where you define the event data structure, you can create a JSON file with the data you want to test with. For example:
 
-```json
-{
-  "command": "test"
-}
+```bash
+curl "http://localhost:9000/generate" -H "Content-Type application/json" -d '{"quantity":2, "max_attempts":100}'
+[[{"arr":[["c","s","i","k"],["o","s","n","u"],["a","u","x","i"],["t","w","o","s"]]},[{"path":[{"x":0,"y":0},{"x":1,"y":0}],"word":"cs"},{"path":[{"x":0,"y"...
+
+curl "http://localhost:9000/solve" -H "Content-Type: application/json" -d '{"r
+1": ["a","b","c","d"],"r2": ["a","b","c","d"], "r3": ["a","b","c","d"], "r4": ["a","b","c","d"]}'
+[{"path":[{"x":0,"y":0},{"x":1,"y":0}],"word":"ab"},{"path":[{"x":0,"y":0},{"x":1,"y":1}],"word":"ab"},{"path":[{"x":0,"y":0},{"x":0,"y":1}],"word":"aa"}...
 ```
 
 Then, run `cargo lambda invoke --data-file ./data.json` to invoke the function with the data in `data.json`.

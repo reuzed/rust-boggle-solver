@@ -25,8 +25,8 @@ pub fn generate_boards(quantity: usize, max_attempts: u64) -> GenerateBoardResul
     }
     best_boards.sort_by(
         |(_,slns1),(_,slns2)|
-         slns1.iter().map(|wr|wr.word.len()).max().unwrap().cmp(
-            &slns2.iter().map(|wr|wr.word.len()).max().unwrap()
+         slns2.iter().map(|wr|wr.word.len()).max().unwrap().cmp(
+            &slns1.iter().map(|wr|wr.word.len()).max().unwrap()
          )
     
     );

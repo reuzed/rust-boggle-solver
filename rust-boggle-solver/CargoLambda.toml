@@ -1,0 +1,15 @@
+# Cargo Lambda deployment configuration
+# See https://www.cargo-lambda.info/guide/configuration.html
+
+[deploy]
+# Enable a public Function URL (no auth) - required for HTTP access without API Gateway
+# WARNING: The URL will be publicly accessible. Use resource-based policies to restrict if needed.
+enable_function_url = true
+# Include words.txt - required by solver/generator at runtime (not bundled in binary)
+include = ["words.txt"]
+
+# Optional: increase memory for board generation workloads
+# memory = 256
+
+# Optional: increase timeout for generate endpoint with many boards
+# timeout = 30
